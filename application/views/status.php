@@ -114,7 +114,6 @@
  </body>
  <script>
  	var option = null;
-  var refresh_index = 0;
 
  	$(function() {
  		$('#option').select2();
@@ -126,10 +125,9 @@
  		$('#datepicker1').hide();
  		$('#datepicker2').hide();
  		$('.go_btn').hide();
-    if(!refresh_index == 0) {
-      window.location.href = "<?php echo site_url('StatusController/index'); ?>";
-      refresh_index = 1;
-    }
+	    if(!window.location.href.includes('StatusController')) {
+	      window.location.href = "<?php echo site_url('StatusController/index'); ?>";
+	    }
  	});
 
  	$('.wrapper').on('change', 'select', function() {
