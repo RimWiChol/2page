@@ -45,6 +45,8 @@ class StatusController extends CI_Controller {
 		$this->load->view('status', $data);
 	}
 
+
+
 	public function insert()
 	{
 		$id = $this->input->post('id');
@@ -68,6 +70,16 @@ class StatusController extends CI_Controller {
 		echo json_encode($result);
 	}
 
+	
+
+	public function remove() {
+		$id = $this->input->get('id');
+		$this->linkmodel->deleteLink($id);
+		$this->statusmodel->deleteClick($id);
+		$result['success'] = true;
+		echo json_encode($result);
+	}
+
 	public function getByOption()
 	{
 		$option = $this->input->post('option');
@@ -82,13 +94,13 @@ class StatusController extends CI_Controller {
 			if($from_day < 10) {
 				$from_date = $from_year.'-0'.$from_month.'-0'.$from_day;
 			} else {
-				$from_date = $from_year.'-0'.$from_month.$from_day;
+				$from_date = $from_year.'-0'.$from_month.'-'.$from_day;
 			}
 		} else {
 			if($from_day < 10) {
-				$from_date = $from_year.$from_month.'-0'.$from_day;
+				$from_date = $from_year.'-'.$from_month.'-0'.$from_day;
 			} else {
-				$from_date = $from_year.$from_month.$from_day;
+				$from_date = $from_year.'-'.$from_month.'-'.$from_day;
 			}
 			
 		}
@@ -97,13 +109,13 @@ class StatusController extends CI_Controller {
 			if($to_day < 10) {
 				$to_date = $to_year.'-0'.$to_month.'-0'.$to_day;
 			} else {
-				$to_date = $to_year.'-0'.$to_month.$to_day;
+				$to_date = $to_year.'-0'.$to_month.'-'.$to_day;
 			}
 		} else {
 			if($to_day < 10) {
-				$to_date = $to_year.$to_month.'-0'.$to_day;
+				$to_date = $to_year.'-'.$to_month.'-0'.$to_day;
 			} else {
-				$to_date = $to_year.$to_month.$to_day;
+				$to_date = $to_year.'-'.$to_month.'-'.$to_day;
 			}
 			
 		}
@@ -145,32 +157,6 @@ class StatusController extends CI_Controller {
 			}
 		}
 		
-
-		// $clicks = $this->statusmodel->getAll();
-		// $filter_date = date('Y-m-d', strtotime($from_year.$from_month.$from_day));
-		// foreach($clicks as $click) {
-		// 	if($db_date < $filter_date) {
-		// 		array_push($data, $db_date);
-		// 		array_push($data, $filter_date);
-		// 	}
-			
-			// array_push($data, $db_date.getMonth());
-			// array_push($data, $db_date.getFullYear(), $db_date.getMonth(), $db_date.getDate());
-		// }
-
-		// $to_date = $this->input->post('to_date');
-		// // $data = array();
-		// $data = array();
-		// if($option === 'Daily') {
-		// 	$clicks = $this->statusmodel->getDaily($from_date);
-		// 	foreach($clicks as $click) {
-		// 		$db_date = date('Y-m-d', $click['click_date']);
-
-		// 		if($db_date != $click_date) {
-		// 			array_push($data, $click);
-		// 		}
-		// 	}
-		// }
 		$result['success'] = true;
 		$result['data'] = $status;
 		echo json_encode($result);

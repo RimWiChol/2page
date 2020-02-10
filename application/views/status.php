@@ -38,6 +38,16 @@
 	  .form-control {
 	  	height: 42px;
 	  }
+    .select2-container .select2-selection--single {
+      height: 42px;
+    }
+    .select2-container .select2-selection--single .select2-selection__rendered{
+      height: 42px;
+      padding-top: 5px;
+    }
+    .select2-container--default .select2-selection--single .select2-selection__arrow {
+      height: 42px;
+    }
   </style>
  </head>
  <body>
@@ -104,6 +114,7 @@
  </body>
  <script>
  	var option = null;
+  var refresh_index = 0;
 
  	$(function() {
  		$('#option').select2();
@@ -115,6 +126,10 @@
  		$('#datepicker1').hide();
  		$('#datepicker2').hide();
  		$('.go_btn').hide();
+    if(!refresh_index == 0) {
+      window.location.href = "<?php echo site_url('StatusController/index'); ?>";
+      refresh_index = 1;
+    }
  	});
 
  	$('.wrapper').on('change', 'select', function() {
@@ -155,6 +170,7 @@
 	 		var to_day = to_date.getDate();	
  		}
  		
+    console.log(from_year + ":" +from_month + ":" + from_day);
  		
  		$.ajax({
  			type: "post",
@@ -166,6 +182,7 @@
  				// console.log(data);
  				// var index = 1;
  				var ind = 0;
+
  				$.each(data, function(index, jsonObject) {
  					if(ind != 0) {
  						$.each(jsonObject, function(key, value) {
