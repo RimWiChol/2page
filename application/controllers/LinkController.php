@@ -23,9 +23,9 @@ class LinkController extends CI_Controller {
 
 	public function insert()
 	{
-		$campaign_id = $this->input->post('new_campaign_id');
-		$real_link = $this->input->post('new_real_link');
-		$filter_link = $this->input->post('new_filter_link');
+		$campaign_id = $this->input->get('new_campaign_id');
+		$real_link = $this->input->get('new_real_link');
+		$filter_link = $this->input->get('new_filter_link');
 		$row = array(
 			'campaign_id' => $campaign_id,
 			'real_link' => $real_link,
@@ -33,19 +33,28 @@ class LinkController extends CI_Controller {
 			'state' => 'green' 
 		);
 		$this->linkmodel->insertLink($row);
-		redirect('LinkController/index');
+		redirect('../../link');
 	}
 
 	public function update()
 	{
-		$id = $this->input->post('update_id');
-		$real_link = $this->input->post('update_real_link');
-		$filter_link = $this->input->post('update_filter_link');
+		$id = $this->input->get('update_id');
+		$real_link = $this->input->get('update_real_link');
+		$filter_link = $this->input->get('update_filter_link');
 		$row = array(
 			'real_link' => $real_link,
 			'filter_link' => $filter_link,
 		);
 		$this->linkmodel->updateLink($id, $row);
-		redirect('LinkController/index');
+		redirect('../../link');
+	}
+
+	public function delete()
+	{
+		$id = $this->input->get('id');
+		$this->linkmodel->deleteLink($id);
+		$this->statusmodel->deleteClick($id);
+		$result['success'] = true;
+		echo json_encode($result);
 	}
 }

@@ -18,7 +18,7 @@
 			}
 			.box
 			{
-				width:1270px;
+				width: 1400px;
 		   		padding:20px;
 		   		background-color:#fff;
 		   		border:1px solid #ccc;
@@ -32,43 +32,42 @@
 		<div class="container box">
 			<h1 align="center">Link Management</h1>
 		    <br />
-    	    <div class="table-responsive">
+    	    <div class="table-responsive" style="width: 1300px;">
 		    	<br />
 			    <div align="left">
-			   		<a href="<?php echo site_url('StatusController/index') ?>">Go to Status page</a>
+			   		<a href="<?php echo site_url('../status') ?>" id="goto_status">Go to Status page</a>
 			    </div>
 			    <div align="right">
 			     	<button name="add" id="add" class="btn btn-info" data-toggle="modal" data-target="#new_link">Add New Link</button>
 			    </div>
 			    <br />
-			    <table id="link_table" class="table table-bordered table-striped">
+			    <table id="link_table" class="table table-bordered table-striped" style="table-layout: fixed; width: 100% !important;">
 				    <thead>
 				    	<tr>
-						    <th style="text-align: center; width: 15%;">No</th>
-						    <th style="text-align: center; width: 15%;">Campaign ID</th>
-						    <th style="text-align: center; width: 20%;">Real Link</th>
-						    <th style="text-align: center; width: 20%;">Filtered Link</th>
-						    <th style="text-align: center; width: 15%;">Option</th>
+						    <th style="text-align: center; width: 5%;">No</th>
+						    <th style="text-align: center; width: 10%;">Campaign ID</th>
+						    <th style="text-align: center; width: 35%;">Real Link</th>
+						    <th style="text-align: center; width: 35%;">Filtered Link</th>
+						    <th style="text-align: center;">Option</th>
 					    </tr>
 				    </thead>
 			     <tbody>
 			     	<?php
-			     		$link_index = 1;
 			     		foreach($links as $link) {
 			     			?>
 			     			<tr id=<?php echo $link['id'] ?>>
-			     				<td style="text-align: center;"><?php echo $link_index; ?></td>
+			     				<td style="text-align: center;"><?php echo $link['id']; ?></td>
 			     				<td style="text-align: center;"><?php echo $link['campaign_id'] ?></td>
-			     				<td style="text-align: center;"><a id="real" href="#"><?php echo $link['real_link'] ?></a></td>
-			     				<td style="text-align: center;"><a id="filter" href="#"><?php echo $link['filter_link'] ?></a></td>
+			     				<td style="text-align: center;"><div style="overflow: auto"><a id="real" href="#"><?php echo $link['real_link'] ?></a></div></td>
+			     				<td style="text-align: center;"><div sytle="overflow: auto"><a id="filter" href="#"><?php echo $link['filter_link'] ?></a></div></td>
 			     				<td style="text-align: center;">
 					                <button type="button" class="btn btn-info update_btn" data-toggle="modal" data-target="#update_link">Update</button>
 					                <button class="btn btn-danger delete_btn">Delete</button>
 				                </td>
 				            </tr>
 				            <?php 
-				            $link_index++;
-				        }?>
+				            }
+				        ?>
 			     </tbody>
 			    </table>
 	    	</div>
@@ -76,7 +75,7 @@
 	    	<div class="modal fade" id="new_link">
 	    		<div class="modal-dialog">
 	    			<div class="modal-content">
-	    				<form method="post" action="insert">
+	    				<form method="get" action="LinkController/insert">
 							<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							  <span aria-hidden="true">&times;</span></button>
@@ -121,7 +120,7 @@
 	    	<div class="modal fade" id="update_link">
 	    		<div class="modal-dialog">
 	    			<div class="modal-content">
-	    				<form method="post" action="update">
+	    				<form method="get" action="LinkController/update">
 							<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
 							  <span aria-hidden="true">&times;</span></button>
@@ -158,7 +157,7 @@
 	</body>
 	<script>
 	 	$(function() {
-	 		// $('#link_table').dataTable({});
+	 		$('#link_table').dataTable({});
 	 		mergeTableCells();
 	 	});
 
@@ -187,28 +186,32 @@
 	 	}
 
 	 	$('a').click(function() {
-	 		var id = $(this).parent().parent().attr("id");
-	 		var is_real = $(this).attr("id") === 'real' ? 0 : 1;
+			if($(this).attr('id') != 'goto_status') {
+	 		var id = $(this).parent().parent().parent().attr("id");
+	 		var is_real = $(this).attr("id") === 'real' ? 1 : 0;
+			console.log(id + ":" + is_real);
 	 		$.ajax({
-	 			type: "post",
-	 			url: "../StatusController/insert",
+	 			type: "get",
+	 			url: "StatusController/insert",
 	 			dataType: "json",
 	 			data: {id : id, is_real : is_real},
 	 			success: function() {
-	 				location.reload(true);
+	 				//location.reload(true);
+					console.log("Insert function");
 	 			},
 	 			failure: function() {
 	 				alert("Failed to update clicks.");
 	 			}
 	 		});
+			}
 	 	});
 
 	 	$(".delete_btn").click(function(){
 		    if (window.confirm('Do you really want to delete it?')) {
 				var id = $(this).parent().parent().attr("id");
 				$.ajax({
-					type: "post",
-					url: "../StatusController/delete",
+					type: "get",
+					url: "LinkController/delete",
 					dataType: "json",
 					data: {id : id},
 					success: function() {

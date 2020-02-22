@@ -6,6 +6,13 @@ class LinkModel extends CI_Model {
         parent::__construct();
         $this->load->database();
     }
+    
+    public function getById($id) {
+        $this->db->from('link');
+	$this->db->where('id', $id);
+	$query = $this->db->get();
+	return $query->result_array();
+    }
 
     public function getAllLinks() {
         $this->db->from('link');

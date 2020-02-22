@@ -71,4 +71,33 @@ class StatusModel extends CI_Model {
         $query = $this->db->get();
         return $query->result_array();
     }
+    
+    public function getReal() {
+	$today = date("Y-m-j");
+	$yesterday = date("Y-m-j", strtotime('-2 days'));
+	$this->db->from('click');
+	$this->db->join('link', 'click.link_id = link.id');
+	//$this->db->order_by('campaign_id', 'asc');
+	$this->db->select('campaign_id, sum(is_real) as `real`');
+	$this->db->where('click_date >=', $yesterday);
+	$this->db->where('click_date <=', $today);
+	$this->db->group_by('campaign_id');
+	$query = $this->db->get();
+	return $query->result_array();
+   }
+
+   public function getFilter() {
+	$today = date("Y-m-j");
+	$yesterday = date("Y-m-j", strtotime('-2 days'));
+	$this->db->from('click');
+	$this->db->join('link', 'click.link_id = link.id');
+	//$this->db->order_by('campaign_id', 'asc');
+	$this->db->select('campaign_id, count(is_real) as `filter`');
+	$this->db->where('click_date >=', $yesterday);
+	$this->db->where('click_date <=', $today);
+	$this->db->where('is_real', 0);
+	$this->db->group_by('campaign_id');
+	$query = $this->db->get();
+	return $query->result_array();
+   }
 }
